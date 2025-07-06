@@ -43,6 +43,7 @@ com/hospital/entity/LabTest.class
 com/hospital/entity/BillItem.class
 com/hospital/entity/InventoryItem$ItemSubcategory.class
 com/hospital/entity/Payment$PaymentMethod.class
+com/hospital/config/SecurityConfig.class
 com/hospital/entity/Patient.class
 com/hospital/entity/Department$DepartmentStatus.class
 com/hospital/entity/MedicalCertificate$CertificateType.class

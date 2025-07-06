@@ -33,6 +33,10 @@ public class LabResult extends BaseEntity {
     @JoinColumn(name = "medical_record_id")
     private MedicalRecord medicalRecord;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "lab_order_id")
+    private LabOrder labOrder;
+
     @Column(name = "test_name", nullable = false, length = 200)
     @NotBlank(message = "Le nom du test ne peut pas être vide")
     private String testName;

@@ -3,6 +3,7 @@
 /workspace/src/main/java/com/hospital/HospitalManagementSystemApplication.java
 /workspace/src/main/java/com/hospital/entity/Staff.java
 /workspace/src/main/java/com/hospital/entity/Bed.java
+/workspace/src/main/java/com/hospital/config/SecurityConfig.java
 /workspace/src/main/java/com/hospital/entity/Appointment.java
 /workspace/src/main/java/com/hospital/entity/Vaccine.java
 /workspace/src/main/java/com/hospital/entity/VaccinationRecord.java

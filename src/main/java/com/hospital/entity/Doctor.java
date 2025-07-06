@@ -128,7 +128,7 @@ public class Doctor extends BaseEntity {
     @OneToMany(mappedBy = "doctor", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Prescription> prescriptions;
 
-    @OneToMany(mappedBy = "doctor", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "surgeon", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Surgery> surgeries;
 
     @OneToMany(mappedBy = "doctor", cascade = CascadeType.ALL, fetch = FetchType.LAZY)

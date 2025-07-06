@@ -36,8 +36,19 @@ public class UserService {
 
     @PostConstruct
     public void initializeSystem() {
-        createSystemRolesAndPermissions();
+        // Simplifier l'initialisation pour éviter les problèmes de lazy loading
+        createBasicRolesAndPermissions();
         createDefaultAdminUser();
+    }
+
+    private void createBasicRolesAndPermissions() {
+        // Créer quelques permissions de base sans les assigner pour l'instant
+        createPermissionIfNotExists("SYSTEM_ADMIN", "Administration système", "Système", "ADMIN");
+        createPermissionIfNotExists("USER_READ", "Lecture des utilisateurs", "Utilisateurs", "READ");
+        createPermissionIfNotExists("PATIENT_READ", "Lecture des patients", "Patients", "READ");
+        
+        // Créer le rôle admin de base
+        createRoleIfNotExists("ADMIN", "Administrateur", "Administrateur système avec tous les droits");
     }
 
     private void createSystemRolesAndPermissions() {
@@ -111,12 +122,7 @@ public class UserService {
             admin.setLastLogin(LocalDateTime.now());
             admin.setMustChangePassword(true);
             
-            // Assigner le rôle admin
-            Role adminRole = roleRepository.findByName("ADMIN").orElse(null);
-            if (adminRole != null) {
-                admin.setRoles(Set.of(adminRole));
-            }
-            
+            // Sauvegarder l'utilisateur d'abord sans rôles pour éviter les problèmes
             userRepository.save(admin);
             
             System.out.println("=== COMPTE ADMINISTRATEUR CRÉÉ ===");
@@ -161,17 +167,22 @@ public class UserService {
                      "REPORTS_READ", "REPORTS_WRITE", "SYSTEM_ADMIN");
     }
 
+    @Transactional
     private void assignPermissionsToRole(String roleName, Set<String> permissionNames) {
+        // Utiliser une approche différente pour éviter les problèmes de lazy loading
         Role role = roleRepository.findByName(roleName).orElse(null);
         if (role != null) {
-            Set<Permission> permissions = new HashSet<>();
+            // Vider d'abord les permissions existantes
+            role.getPermissions().clear();
+            roleRepository.save(role);
+            
+            // Puis ajouter les nouvelles permissions une par une
             for (String permissionName : permissionNames) {
                 Permission permission = permissionRepository.findByName(permissionName).orElse(null);
                 if (permission != null) {
-                    permissions.add(permission);
+                    role.getPermissions().add(permission);
                 }
             }
-            role.setPermissions(permissions);
             roleRepository.save(role);
         }
     }
