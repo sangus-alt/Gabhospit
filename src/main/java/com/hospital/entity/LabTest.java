@@ -140,8 +140,9 @@ public class LabTest extends BaseEntity {
     @OneToMany(mappedBy = "labTest", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<LabTestParameter> parameters;
 
-    @OneToMany(mappedBy = "labTest", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Set<LabOrder> labOrders;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "lab_order_id")
+    private LabOrder labOrder;
 
     public enum TestStatus {
         ACTIVE("Actif"),

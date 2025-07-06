@@ -101,7 +101,7 @@ public class MedicalRecord extends BaseEntity {
     private String laboratoryResults;
 
     @Column(name = "imaging_results", length = 1000)
-    private String imagingResults;
+    private String imagingResultsText;
 
     @Column(name = "notes", length = 2000)
     private String notes;

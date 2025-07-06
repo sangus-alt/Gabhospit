@@ -85,9 +85,9 @@ public class MedicalAttachment extends BaseEntity {
     @Column(name = "checksum", length = 100)
     private String checksum;
 
-    @Column(name = "version")
+    @Column(name = "file_version")
     @Min(value = 1, message = "La version doit être d'au moins 1")
-    private Integer version = 1;
+    private Integer fileVersion = 1;
 
     @Column(name = "parent_attachment_id")
     private Long parentAttachmentId;
