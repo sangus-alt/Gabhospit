@@ -113,6 +113,12 @@ public class Patient extends BaseEntity {
     @Column(name = "photo_url", length = 500)
     private String photoUrl;
 
+    @Column(name = "photo_base64", columnDefinition = "LONGTEXT")
+    private String photoBase64;
+
+    @Column(name = "profession", length = 100)
+    private String profession;
+
     @Column(name = "notes", length = 2000)
     private String notes;
 

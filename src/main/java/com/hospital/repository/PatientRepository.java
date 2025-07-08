@@ -93,4 +93,7 @@ public interface PatientRepository extends JpaRepository<Patient, Long> {
 
     @Query("SELECT p.city, COUNT(p) FROM Patient p WHERE p.city IS NOT NULL GROUP BY p.city")
     List<Object[]> getPatientCountByCity();
+
+    // Méthode pour vérifier l'existence d'un patient par nom, prénom et date de naissance
+    boolean existsByFirstNameAndLastNameAndDateOfBirth(String firstName, String lastName, LocalDate dateOfBirth);
 }

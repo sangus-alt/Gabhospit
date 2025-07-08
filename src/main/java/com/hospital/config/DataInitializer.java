@@ -2,6 +2,7 @@ package com.hospital.config;
 
 import com.hospital.entity.*;
 import com.hospital.repository.*;
+import com.hospital.service.HospitalConfigurationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
@@ -27,6 +28,7 @@ public class DataInitializer implements CommandLineRunner {
     private final PharmacyRepository pharmacyRepository;
     private final LabTestRepository labTestRepository;
     private final PasswordEncoder passwordEncoder;
+    private final HospitalConfigurationService configurationService;
 
     @Override
     public void run(String... args) throws Exception {
@@ -40,6 +42,7 @@ public class DataInitializer implements CommandLineRunner {
         initializePatients();
         initializeMedications();
         initializeLabTests();
+        initializeConfiguration();
         
         log.info("✅ Initialisation des données terminée avec succès !");
         log.info("🔑 Compte administrateur créé:");
@@ -354,6 +357,55 @@ public class DataInitializer implements CommandLineRunner {
             labTestRepository.save(test2);
             
             log.info("✅ 2 tests de laboratoire créés");
+        }
+    }
+
+    private void initializeConfiguration() {
+        if (configurationService.getActiveConfiguration().isEmpty()) {
+            log.info("Création de la configuration par défaut...");
+            
+            HospitalConfiguration config = new HospitalConfiguration();
+            config.setHospitalName("Centre Hospitalier Universitaire");
+            config.setHospitalAddress("123 Avenue de la Santé");
+            config.setCity("Paris");
+            config.setPostalCode("75014");
+            config.setCountry("France");
+            config.setPhone("01 42 16 00 00");
+            config.setFax("01 42 16 00 01");
+            config.setEmail("contact@chu-paris.fr");
+            config.setWebsite("www.chu-paris.fr");
+            config.setHospitalType("PUBLIC");
+            config.setLicenseNumber("LIC-CHU-2024-001");
+            config.setDirectorName("Dr. François MARTIN");
+            config.setMedicalDirectorName("Dr. Sophie BERNARD");
+            config.setTotalBeds(450);
+            config.setEmergencyPhone("15");
+            config.setAppointmentPhone("01 42 16 10 10");
+            config.setWorkingHours("7h00 - 19h00");
+            config.setEmergencyHours("24h/24 - 7j/7");
+            config.setLanguage("FR");
+            config.setTimezone("Europe/Paris");
+            config.setCurrency("EUR");
+            config.setTaxRate(0.20);
+            config.setPatientNumberPrefix("P");
+            config.setDoctorNumberPrefix("D");
+            config.setBillNumberPrefix("BILL");
+            config.setEnableSmsNotifications(false);
+            config.setEnableEmailNotifications(true);
+            config.setAutoBackupEnabled(true);
+            config.setBackupFrequencyHours(24);
+            config.setSessionTimeoutMinutes(30);
+            config.setMaxLoginAttempts(5);
+            config.setPatientCardTemplate("DEFAULT");
+            config.setPrescriptionTemplate("DEFAULT");
+            config.setCertificateTemplate("DEFAULT");
+            config.setFooterText("Centre Hospitalier Universitaire - Service Public de Santé");
+            config.setHeaderText("Votre santé, notre priorité");
+            config.setSystemVersion("1.0.0");
+            config.setMaintenanceMode(false);
+            
+            configurationService.saveConfiguration(config);
+            log.info("✅ Configuration par défaut créée");
         }
     }
 }
