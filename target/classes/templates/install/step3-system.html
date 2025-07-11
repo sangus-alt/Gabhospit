@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Étape 3 - Configuration Système</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        .install-container {
+            max-width: 900px;
+            margin: 50px auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .install-header {
+            background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .install-content {
+            padding: 40px;
+        }
+        
+        .step-indicator {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
+        }
+        
+        .step {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #e9ecef;
+            color: #6c757d;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 10px;
+            font-weight: bold;
+            position: relative;
+        }
+        
+        .step.active {
+            background: #007bff;
+            color: white;
+        }
+        
+        .step.completed {
+            background: #28a745;
+            color: white;
+        }
+        
+        .step:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            left: 50px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 60px;
+            height: 2px;
+            background: #e9ecef;
+        }
+        
+        .config-section {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 10px;
+            padding: 25px;
+            margin: 20px 0;
+        }
+        
+        .btn-install {
+            background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.1rem;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-install:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0,123,255,0.3);
+        }
+    </style>
+</head>
+<body>
+    <div class="install-container">
+        <div class="install-header">
+            <i class="fas fa-hospital-alt fa-3x mb-3"></i>
+            <h1>Système d'Information Hospitalier</h1>
+            <p class="mb-0">Étape 3 - Configuration Système</p>
+        </div>
+        
+        <div class="install-content">
+            <!-- Indicateur d'étapes -->
+            <div class="step-indicator">
+                <div class="step completed">1</div>
+                <div class="step completed">2</div>
+                <div class="step active">3</div>
+                <div class="step">4</div>
+                <div class="step">5</div>
+            </div>
+            
+            <div class="text-center mb-4">
+                <h2>Configuration du Système</h2>
+                <p class="text-muted">Configurez les paramètres généraux de votre système hospitalier</p>
+            </div>
+            
+            <form id="system-config-form">
+                <!-- Configuration Générale -->
+                <div class="config-section">
+                    <h5><i class="fas fa-cog me-2"></i>Paramètres Généraux</h5>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="hospital-name" class="form-label">Nom de l'Hôpital</label>
+                                <input type="text" class="form-control" id="hospital-name" name="hospitalName" 
+                                       value="Centre Hospitalier Universitaire" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="hospital-address" class="form-label">Adresse</label>
+                                <input type="text" class="form-control" id="hospital-address" name="hospitalAddress" 
+                                       placeholder="123 Rue de la Santé, 75000 Paris">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="hospital-phone" class="form-label">Téléphone</label>
+                                <input type="tel" class="form-control" id="hospital-phone" name="hospitalPhone" 
+                                       placeholder="+33 1 23 45 67 89">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="hospital-email" class="form-label">Email Principal</label>
+                                <input type="email" class="form-control" id="hospital-email" name="hospitalEmail" 
+                                       placeholder="contact@hopital.fr">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Configuration Administrateur -->
+                <div class="config-section">
+                    <h5><i class="fas fa-user-shield me-2"></i>Compte Administrateur</h5>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="admin-firstname" class="form-label">Prénom</label>
+                                <input type="text" class="form-control" id="admin-firstname" name="adminFirstName" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="admin-lastname" class="form-label">Nom</label>
+                                <input type="text" class="form-control" id="admin-lastname" name="adminLastName" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="admin-username" class="form-label">Nom d'utilisateur</label>
+                                <input type="text" class="form-control" id="admin-username" name="adminUsername" 
+                                       value="admin" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="admin-email" class="form-label">Email</label>
+                                <input type="email" class="form-control" id="admin-email" name="adminEmail" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="admin-password" class="form-label">Mot de passe</label>
+                                <input type="password" class="form-control" id="admin-password" name="adminPassword" 
+                                       minlength="8" required>
+                                <small class="text-muted">Minimum 8 caractères</small>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="admin-password-confirm" class="form-label">Confirmer le mot de passe</label>
+                                <input type="password" class="form-control" id="admin-password-confirm" 
+                                       name="adminPasswordConfirm" minlength="8" required>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Configuration Email (Optionnel) -->
+                <div class="config-section">
+                    <h5>
+                        <i class="fas fa-envelope me-2"></i>Configuration Email 
+                        <small class="text-muted">(Optionnel)</small>
+                    </h5>
+                    
+                    <div class="form-check mb-3">
+                        <input class="form-check-input" type="checkbox" id="enable-email" name="enableEmail">
+                        <label class="form-check-label" for="enable-email">
+                            Activer les notifications par email
+                        </label>
+                    </div>
+                    
+                    <div id="email-config" style="display: none;">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="smtp-host" class="form-label">Serveur SMTP</label>
+                                    <input type="text" class="form-control" id="smtp-host" name="smtpHost" 
+                                           placeholder="smtp.gmail.com">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="smtp-port" class="form-label">Port SMTP</label>
+                                    <input type="number" class="form-control" id="smtp-port" name="smtpPort" 
+                                           value="587">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="smtp-username" class="form-label">Utilisateur SMTP</label>
+                                    <input type="email" class="form-control" id="smtp-username" name="smtpUsername">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="smtp-password" class="form-label">Mot de passe SMTP</label>
+                                    <input type="password" class="form-control" id="smtp-password" name="smtpPassword">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Configuration Avancée -->
+                <div class="config-section">
+                    <h5>
+                        <i class="fas fa-cogs me-2"></i>Options Avancées
+                        <button type="button" class="btn btn-link btn-sm" onclick="toggleAdvanced()">
+                            <span id="advanced-toggle-text">Afficher</span>
+                        </button>
+                    </h5>
+                    
+                    <div id="advanced-config" style="display: none;">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="session-timeout" class="form-label">Timeout Session (minutes)</label>
+                                    <input type="number" class="form-control" id="session-timeout" 
+                                           name="sessionTimeout" value="30">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="max-upload-size" class="form-label">Taille Max Upload (MB)</label>
+                                    <input type="number" class="form-control" id="max-upload-size" 
+                                           name="maxUploadSize" value="10">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="enable-audit" 
+                                           name="enableAudit" checked>
+                                    <label class="form-check-label" for="enable-audit">
+                                        Activer l'audit des actions
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="enable-backup" 
+                                           name="enableBackup" checked>
+                                    <label class="form-check-label" for="enable-backup">
+                                        Sauvegardes automatiques
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            
+            <div class="d-flex justify-content-between mt-4">
+                <a href="/install/step2" class="btn btn-outline-secondary">
+                    <i class="fas fa-arrow-left me-2"></i>Retour
+                </a>
+                
+                <button id="next-btn" class="btn btn-primary btn-install" onclick="proceedToNext()">
+                    <span>Continuer</span>
+                    <i class="fas fa-arrow-right ms-2"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Vérification des mots de passe
+            const password = document.getElementById('admin-password');
+            const confirmPassword = document.getElementById('admin-password-confirm');
+            
+            function validatePasswords() {
+                if (password.value !== confirmPassword.value) {
+                    confirmPassword.setCustomValidity('Les mots de passe ne correspondent pas');
+                } else {
+                    confirmPassword.setCustomValidity('');
+                }
+            }
+            
+            password.addEventListener('input', validatePasswords);
+            confirmPassword.addEventListener('input', validatePasswords);
+            
+            // Toggle email configuration
+            document.getElementById('enable-email').addEventListener('change', function() {
+                const emailConfig = document.getElementById('email-config');
+                emailConfig.style.display = this.checked ? 'block' : 'none';
+            });
+        });
+        
+        function toggleAdvanced() {
+            const advancedConfig = document.getElementById('advanced-config');
+            const toggleText = document.getElementById('advanced-toggle-text');
+            
+            if (advancedConfig.style.display === 'none') {
+                advancedConfig.style.display = 'block';
+                toggleText.textContent = 'Masquer';
+            } else {
+                advancedConfig.style.display = 'none';
+                toggleText.textContent = 'Afficher';
+            }
+        }
+        
+        function proceedToNext() {
+            const form = document.getElementById('system-config-form');
+            
+            if (form.checkValidity()) {
+                // Sauvegarder la configuration dans le sessionStorage
+                const formData = new FormData(form);
+                const config = Object.fromEntries(formData);
+                
+                // Ajouter les checkboxes
+                config.enableEmail = document.getElementById('enable-email').checked;
+                config.enableAudit = document.getElementById('enable-audit').checked;
+                config.enableBackup = document.getElementById('enable-backup').checked;
+                
+                sessionStorage.setItem('systemConfig', JSON.stringify(config));
+                
+                window.location.href = '/install/step4';
+            } else {
+                form.reportValidity();
+            }
+        }
+    </script>
+</body>
+</html>
