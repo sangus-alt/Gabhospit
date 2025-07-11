@@ -1,0 +1,93 @@
+spring:
+  application:
+    name: hospital-management-system
+  
+  datasource:
+    url: jdbc:postgresql://localhost:5432/hospital_db
+    username: ${DB_USERNAME:hospital_user}
+    password: ${DB_PASSWORD:hospital_pass}
+    driver-class-name: org.postgresql.Driver
+    
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    
+  security:
+    user:
+      name: ${ADMIN_USER:admin}
+      password: ${ADMIN_PASSWORD:admin123}
+      roles: ADMIN
+      
+  mail:
+    host: ${MAIL_HOST:smtp.gmail.com}
+    port: ${MAIL_PORT:587}
+    username: ${MAIL_USERNAME:}
+    password: ${MAIL_PASSWORD:}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+
+server:
+  port: 8080
+  servlet:
+    context-path: /api
+
+logging:
+  level:
+    com.hospital: DEBUG
+    org.springframework.security: DEBUG
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+    
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always
+      
+# Configuration JWT
+jwt:
+  secret: ${JWT_SECRET:hospitalSecretKey2024ForAuthenticationAndAuthorization}
+  expiration: 86400000 # 24 heures en millisecondes
+  refresh-expiration: 604800000 # 7 jours en millisecondes
+  
+# Configuration des notifications
+notifications:
+  email:
+    enabled: true
+    from: ${NOTIFICATION_EMAIL:noreply@hospital.com}
+  sms:
+    enabled: false
+    
+# Configuration des fichiers
+file:
+  upload:
+    path: ${UPLOAD_PATH:/tmp/hospital/uploads}
+    max-size: 10MB
+    allowed-types: pdf,doc,docx,jpg,jpeg,png,gif
+    
+# Configuration des rapports
+reports:
+  output-path: ${REPORTS_PATH:/tmp/hospital/reports}
+  
+# Configuration de la pagination
+pagination:
+  default-page-size: 20
+  max-page-size: 100
