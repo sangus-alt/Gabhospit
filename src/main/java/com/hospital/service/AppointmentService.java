@@ -37,7 +37,7 @@ public class AppointmentService {
             throw new RuntimeException("Créneau horaire non disponible pour ce médecin");
         }
         
-        appointment.setStatus("SCHEDULED");
+        appointment.setStatus(Appointment.AppointmentStatus.SCHEDULED);
         appointment.setCreatedDate(LocalDateTime.now());
         
         Appointment savedAppointment = appointmentRepository.save(appointment);
@@ -142,7 +142,7 @@ public class AppointmentService {
 
     public Appointment confirmAppointment(Long id) {
         Appointment appointment = getAppointmentById(id);
-        appointment.setStatus("CONFIRMED");
+        appointment.setStatus(Appointment.AppointmentStatus.CONFIRMED);
         appointment.setConfirmedDate(LocalDateTime.now());
         
         Appointment savedAppointment = appointmentRepository.save(appointment);
@@ -152,7 +152,7 @@ public class AppointmentService {
 
     public Appointment cancelAppointment(Long id, String reason) {
         Appointment appointment = getAppointmentById(id);
-        appointment.setStatus("CANCELLED");
+        appointment.setStatus(Appointment.AppointmentStatus.CANCELLED);
         appointment.setCancellationReason(reason);
         appointment.setCancelledDate(LocalDateTime.now());
         
@@ -163,7 +163,7 @@ public class AppointmentService {
 
     public Appointment completeAppointment(Long id, String notes) {
         Appointment appointment = getAppointmentById(id);
-        appointment.setStatus("COMPLETED");
+        appointment.setStatus(Appointment.AppointmentStatus.COMPLETED);
         appointment.setNotes(notes);
         appointment.setCompletedDate(LocalDateTime.now());
         
@@ -174,7 +174,7 @@ public class AppointmentService {
 
     public Appointment markAsNoShow(Long id) {
         Appointment appointment = getAppointmentById(id);
-        appointment.setStatus("NO_SHOW");
+        appointment.setStatus(Appointment.AppointmentStatus.NO_SHOW);
         return appointmentRepository.save(appointment);
     }
 
@@ -188,7 +188,7 @@ public class AppointmentService {
         }
         
         appointment.setAppointmentDate(newDateTime);
-        appointment.setStatus("RESCHEDULED");
+        appointment.setStatus(Appointment.AppointmentStatus.RESCHEDULED);
         
         return appointmentRepository.save(appointment);
     }

@@ -45,9 +45,9 @@ public class QueueService {
         queueItem.setPatient(patient);
         queueItem.setDepartment(department);
         queueItem.setQueueNumber(generateQueueNumber(department));
-        queueItem.setPriority(priority != null ? priority : calculatePriority(patient));
+        queueItem.setPriority(priority != null ? QueueManagement.Priority.values()[priority - 1] : calculatePriority(patient));
         queueItem.setArrivalTime(LocalDateTime.now());
-        queueItem.setStatus("WAITING");
+        queueItem.setStatus(QueueManagement.QueueStatus.WAITING);
         queueItem.setNotes(notes);
         
         // Calculer l'estimation du temps d'attente
@@ -153,7 +153,7 @@ public class QueueService {
         }
         
         QueueManagement nextPatient = waitingPatients.get(0); // Premier de la liste (trié par priorité et heure)
-        nextPatient.setStatus("CALLED");
+        nextPatient.setStatus(QueueManagement.QueueStatus.CALLED);
         nextPatient.setCalledTime(LocalDateTime.now());
         
         QueueManagement savedQueue = queueRepository.save(nextPatient);
@@ -165,14 +165,14 @@ public class QueueService {
 
     public QueueManagement startService(Long queueId) {
         QueueManagement queueItem = getQueueItemById(queueId);
-        queueItem.setStatus("IN_PROGRESS");
+        queueItem.setStatus(QueueManagement.QueueStatus.IN_SERVICE);
         queueItem.setServiceStartTime(LocalDateTime.now());
         return queueRepository.save(queueItem);
     }
 
     public QueueManagement completeService(Long queueId, String serviceNotes) {
         QueueManagement queueItem = getQueueItemById(queueId);
-        queueItem.setStatus("COMPLETED");
+        queueItem.setStatus(QueueManagement.QueueStatus.COMPLETED);
         queueItem.setCompletionTime(LocalDateTime.now());
         queueItem.setServiceNotes(serviceNotes);
         
@@ -183,14 +183,14 @@ public class QueueService {
 
     public QueueManagement markAsNoShow(Long queueId) {
         QueueManagement queueItem = getQueueItemById(queueId);
-        queueItem.setStatus("NO_SHOW");
+        queueItem.setStatus(QueueManagement.QueueStatus.NO_SHOW);
         queueItem.setCompletionTime(LocalDateTime.now());
         return queueRepository.save(queueItem);
     }
 
     public QueueManagement updatePriority(Long queueId, Integer newPriority) {
         QueueManagement queueItem = getQueueItemById(queueId);
-        queueItem.setPriority(newPriority);
+        queueItem.setPriority(QueueManagement.Priority.values()[newPriority - 1]);
         
         // Recalculer l'estimation du temps d'attente
         queueItem.setEstimatedWaitTime(calculateEstimatedWaitTime(queueItem.getDepartment(), newPriority));
@@ -200,7 +200,7 @@ public class QueueService {
 
     public void removeFromQueue(Long queueId, String reason) {
         QueueManagement queueItem = getQueueItemById(queueId);
-        queueItem.setStatus("CANCELLED");
+        queueItem.setStatus(QueueManagement.QueueStatus.CANCELLED);
         queueItem.setCompletionTime(LocalDateTime.now());
         queueItem.setNotes(queueItem.getNotes() + " - Annulé: " + reason);
         queueRepository.save(queueItem);
@@ -213,17 +213,17 @@ public class QueueService {
         return prefix + timestamp + String.format("%03d", (int)(Math.random() * 1000));
     }
 
-    private Integer calculatePriority(Patient patient) {
+    private QueueManagement.Priority calculatePriority(Patient patient) {
         // Logique de calcul de priorité basée sur l'âge, l'urgence, etc.
-        Integer priority = 3; // Priorité normale par défaut
+        QueueManagement.Priority priority = QueueManagement.Priority.MEDIUM; // Priorité normale par défaut
         
         // Priorité plus élevée pour les personnes âgées (65+)
         if (patient.getDateOfBirth() != null) {
             int age = LocalDateTime.now().getYear() - patient.getDateOfBirth().getYear();
             if (age >= 65) {
-                priority = 4;
+                priority = QueueManagement.Priority.HIGH;
             } else if (age <= 5) {
-                priority = 4; // Priorité pour les jeunes enfants
+                priority = QueueManagement.Priority.HIGH; // Priorité pour les jeunes enfants
             }
         }
         
@@ -237,7 +237,7 @@ public class QueueService {
         
         int patientsAhead = 0;
         for (QueueManagement patient : waitingPatients) {
-            if (patient.getPriority() > priority || 
+            if (patient.getPriority().ordinal() > priority || 
                 (patient.getPriority().equals(priority) && patient.getArrivalTime().isBefore(LocalDateTime.now()))) {
                 patientsAhead++;
             }

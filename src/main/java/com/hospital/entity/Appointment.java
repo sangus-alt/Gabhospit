@@ -108,6 +108,19 @@ public class Appointment extends BaseEntity {
     @Column(name = "special_instructions", length = 1000)
     private String specialInstructions;
 
+    // Nouveaux champs pour corriger les erreurs de compilation
+    @Column(name = "created_date")
+    private LocalDateTime createdDate;
+
+    @Column(name = "confirmed_date")
+    private LocalDateTime confirmedDate;
+
+    @Column(name = "completed_date")
+    private LocalDateTime completedDate;
+
+    @Column(name = "is_urgent")
+    private Boolean isUrgent = false;
+
     @OneToOne(mappedBy = "appointment", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Consultation consultation;
 
@@ -115,6 +128,12 @@ public class Appointment extends BaseEntity {
     public void prePersist() {
         if (durationMinutes == null) {
             durationMinutes = 30; // Durée par défaut
+        }
+        if (createdDate == null) {
+            createdDate = LocalDateTime.now();
+        }
+        if (isUrgent == null) {
+            isUrgent = false;
         }
     }
 

@@ -115,6 +115,22 @@ public class Doctor extends BaseEntity {
     @Column(name = "notes", length = 2000)
     private String notes;
 
+    // Nouveaux champs pour corriger les erreurs de compilation
+    @Column(name = "is_active")
+    private Boolean isActive = true;
+
+    @Column(name = "is_available")
+    private Boolean isAvailable = true;
+
+    @Column(name = "hire_date")
+    private LocalDateTime hireDate;
+
+    @Column(name = "qualifications", length = 1000)
+    private String qualifications;
+
+    @Column(name = "working_hours", length = 200)
+    private String workingHours;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "department_id")
     private Department department;
@@ -138,6 +154,15 @@ public class Doctor extends BaseEntity {
     public void prePersist() {
         if (joiningDate == null) {
             joiningDate = LocalDateTime.now();
+        }
+        if (hireDate == null) {
+            hireDate = LocalDateTime.now();
+        }
+        if (isActive == null) {
+            isActive = true;
+        }
+        if (isAvailable == null) {
+            isAvailable = true;
         }
     }
 

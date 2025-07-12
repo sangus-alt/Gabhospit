@@ -101,6 +101,10 @@ public class Prescription extends BaseEntity {
     @Column(name = "signed_date")
     private LocalDateTime signedDate;
 
+    // Nouveaux champs pour corriger les erreurs de compilation
+    @Column(name = "items", length = 2000)
+    private String items;
+
     @OneToMany(mappedBy = "prescription", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<PrescriptionItem> prescriptionItems;
 

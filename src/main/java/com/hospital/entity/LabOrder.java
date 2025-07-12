@@ -70,6 +70,28 @@ public class LabOrder extends BaseEntity {
     @Column(name = "notes", length = 1000)
     private String notes;
 
+    // Nouveaux champs pour corriger les erreurs de compilation
+    @Column(name = "sample_id", length = 50)
+    private String sampleId;
+
+    @Column(name = "collection_date")
+    private LocalDateTime collectionDate;
+
+    @Column(name = "completion_date")
+    private LocalDateTime completionDate;
+
+    @Column(name = "collected_by", length = 100)
+    private String collectedBy;
+
+    @Column(name = "processing_start_date")
+    private LocalDateTime processingStartDate;
+
+    @Column(name = "results", length = 2000)
+    private String results;
+
+    @Column(name = "is_urgent")
+    private Boolean isUrgent = false;
+
     @OneToMany(mappedBy = "labOrder", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<LabTest> labTests;
 
@@ -80,6 +102,9 @@ public class LabOrder extends BaseEntity {
     public void prePersist() {
         if (orderDate == null) {
             orderDate = LocalDateTime.now();
+        }
+        if (isUrgent == null) {
+            isUrgent = false;
         }
     }
 

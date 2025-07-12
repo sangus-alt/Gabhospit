@@ -2,6 +2,7 @@
 /workspace/src/main/java/com/hospital/config/SecurityConfig.java
 /workspace/src/main/java/com/hospital/service/PrintService.java
 /workspace/src/main/java/com/hospital/controller/VaccineController.java
+/workspace/src/main/java/com/hospital/repository/LabResultRepository.java
 /workspace/src/main/java/com/hospital/entity/Doctor.java
 /workspace/src/main/java/com/hospital/service/UserService.java
 /workspace/src/main/java/com/hospital/entity/MedicalRecord.java
