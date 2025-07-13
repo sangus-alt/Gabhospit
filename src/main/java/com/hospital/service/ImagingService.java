@@ -246,7 +246,7 @@ public class ImagingService {
         log.info("Annulation de l'examen d'imagerie ID: {} pour raison: {}", id, reason);
         
         ImagingResult result = getImagingResultById(id);
-        result.setStatus(ImagingResult.ImagingStatus.CANCELLED);
+        result.setResultStatus(ImagingResult.ResultStatus.CANCELLED);
         result.setNotes(result.getNotes() != null ? 
                 result.getNotes() + "\nAnnulé: " + reason : "Annulé: " + reason);
         
@@ -266,7 +266,7 @@ public class ImagingService {
      * Compter les examens par statut
      */
     @Transactional(readOnly = true)
-    public long countExamsByStatus(ImagingResult.ImagingStatus status) {
+    public long countExamsByStatus(ImagingResult.ResultStatus status) {
         return imagingRepository.countByStatus(status);
     }
 

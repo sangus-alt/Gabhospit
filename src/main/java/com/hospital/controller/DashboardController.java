@@ -199,12 +199,12 @@ public class DashboardController {
         
         try {
             // Test de connectivité aux services
-            health.put("patientService", patientService.countActivePatients() != null ? "UP" : "DOWN");
-            health.put("doctorService", doctorService.countActiveDoctors() != null ? "UP" : "DOWN");
-            health.put("queueService", queueService.countWaitingPatients() != null ? "UP" : "DOWN");
-            health.put("labService", laboratoryService.countPendingOrders() != null ? "UP" : "DOWN");
-            health.put("pharmacyService", pharmacyService.countActiveMedications() != null ? "UP" : "DOWN");
-            health.put("billingService", billingService.getTodayRevenue() != null ? "UP" : "DOWN");
+            health.put("patientService", patientService.countActivePatients() != 0 ? "UP" : "DOWN");
+            health.put("doctorService", doctorService.countActiveDoctors() != 0 ? "UP" : "DOWN");
+            health.put("queueService", queueService.countWaitingPatients() != 0 ? "UP" : "DOWN");
+            health.put("labService", laboratoryService.countPendingOrders() != 0 ? "UP" : "DOWN");
+            health.put("pharmacyService", pharmacyService.countActiveMedications() != 0 ? "UP" : "DOWN");
+            health.put("billingService", billingService.getTodayRevenue() != 0.0 ? "UP" : "DOWN");
             
             health.put("overallStatus", "UP");
             health.put("timestamp", LocalDateTime.now());

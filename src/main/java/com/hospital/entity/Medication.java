@@ -7,6 +7,7 @@ import lombok.ToString;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Set;
 
 @Entity
@@ -128,8 +129,55 @@ public class Medication extends BaseEntity {
     @Column(name = "notes", length = 2000)
     private String notes;
 
+    // Nouveaux champs pour corriger les erreurs de compilation
+    @Column(name = "medication_code", length = 50)
+    private String medicationCode;
+
+    @Column(name = "created_date")
+    private LocalDateTime createdDate;
+
+    @Column(name = "price")
+    private Double price;
+
+    @Column(name = "current_stock")
+    private Integer currentStock;
+
+    @Column(name = "minimum_stock")
+    private Integer minimumStock;
+
+    @Column(name = "dosage", length = 100)
+    private String dosage;
+
+    @Column(name = "last_updated")
+    private LocalDateTime lastUpdated;
+
     @OneToMany(mappedBy = "medication", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<PrescriptionItem> prescriptionItems;
+
+    @PrePersist
+    public void prePersist() {
+        if (createdDate == null) {
+            createdDate = LocalDateTime.now();
+        }
+        if (medicationCode == null) {
+            medicationCode = code;
+        }
+        if (price == null) {
+            price = unitPrice;
+        }
+        if (currentStock == null) {
+            currentStock = stockQuantity;
+        }
+        if (minimumStock == null) {
+            minimumStock = minStockLevel;
+        }
+        if (dosage == null) {
+            dosage = strength;
+        }
+        if (lastUpdated == null) {
+            lastUpdated = LocalDateTime.now();
+        }
+    }
 
     public enum MedicationCategory {
         ANTIBIOTIC("Antibiotique"),

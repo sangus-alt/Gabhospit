@@ -121,6 +121,13 @@ public class QueueManagement extends BaseEntity {
     @Column(name = "notes", length = 1000)
     private String notes;
 
+    // Nouveaux champs pour corriger les erreurs de compilation
+    @Column(name = "completion_time")
+    private LocalDateTime completionTime;
+
+    @Column(name = "service_notes", length = 1000)
+    private String serviceNotes;
+
     @PrePersist
     public void prePersist() {
         if (arrivalTime == null) {
