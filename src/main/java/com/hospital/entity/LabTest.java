@@ -137,12 +137,65 @@ public class LabTest extends BaseEntity {
     @Column(name = "expiry_date")
     private LocalDateTime expiryDate;
 
+    // Nouveaux champs pour corriger les erreurs de compilation
+    @Column(name = "created_date")
+    private LocalDateTime createdDate;
+
+    @Column(name = "name", length = 200)
+    private String name;
+
+    @Column(name = "description", length = 1000)
+    private String description;
+
+    @Column(name = "sample_type", length = 100)
+    private String sampleType;
+
+    @Column(name = "price")
+    private Double price;
+
+    @Column(name = "processing_time_hours")
+    private Integer processingTimeHours;
+
+    @Column(name = "preparation_instructions", length = 1000)
+    private String preparationInstructions;
+
+    @Column(name = "normal_ranges", length = 500)
+    private String normalRanges;
+
     @OneToMany(mappedBy = "labTest", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<LabTestParameter> parameters;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "lab_order_id")
     private LabOrder labOrder;
+
+    @PrePersist
+    public void prePersist() {
+        if (createdDate == null) {
+            createdDate = LocalDateTime.now();
+        }
+        if (name == null) {
+            name = testName;
+        }
+        if (description == null) {
+            description = clinicalSignificance;
+        }
+        if (sampleType == null) {
+            sampleType = specimenType;
+        }
+        if (price == null) {
+            price = cost;
+        }
+        if (processingTimeHours == null) {
+            processingTimeHours = tatHours;
+        }
+        if (preparationInstructions == null) {
+            preparationInstructions = collectionInstructions;
+        }
+        if (normalRanges == null) {
+            normalRanges = normalRangeMale + " / " + normalRangeFemale;
+        }
+    }
 
     public enum TestStatus {
         ACTIVE("Actif"),

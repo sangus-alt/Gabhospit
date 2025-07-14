@@ -30,7 +30,7 @@ public class ConsultationService {
         log.info("Création d'une nouvelle consultation pour le patient ID: {}", consultation.getPatient().getId());
         
         consultation.setConsultationDate(LocalDateTime.now());
-        consultation.setStatus("IN_PROGRESS");
+        consultation.setStatus(Consultation.ConsultationStatus.IN_PROGRESS);
         
         Consultation savedConsultation = consultationRepository.save(consultation);
         log.info("Consultation créée avec succès avec l'ID: {}", savedConsultation.getId());
@@ -137,7 +137,7 @@ public class ConsultationService {
         consultation.setDiagnosis(diagnosis);
         consultation.setTreatmentPlan(treatmentPlan);
         consultation.setNotes(notes);
-        consultation.setStatus("COMPLETED");
+        consultation.setStatus(Consultation.ConsultationStatus.COMPLETED);
         consultation.setEndTime(LocalDateTime.now());
         
         Consultation savedConsultation = consultationRepository.save(consultation);

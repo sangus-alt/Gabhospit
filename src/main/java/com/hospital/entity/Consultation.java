@@ -160,6 +160,16 @@ public class Consultation extends BaseEntity {
     @Column(name = "signed_date")
     private LocalDateTime signedDate;
 
+    // Nouveaux champs pour corriger les erreurs de compilation
+    @Column(name = "present_illness", length = 2000)
+    private String presentIllness;
+
+    @Column(name = "is_urgent")
+    private Boolean isUrgent = false;
+
+    @Column(name = "requires_follow_up")
+    private Boolean requiresFollowUp = false;
+
     @PrePersist
     public void prePersist() {
         if (consultationDate == null) {
@@ -167,6 +177,15 @@ public class Consultation extends BaseEntity {
         }
         if (startTime == null) {
             startTime = LocalDateTime.now();
+        }
+        if (isUrgent == null) {
+            isUrgent = false;
+        }
+        if (requiresFollowUp == null) {
+            requiresFollowUp = false;
+        }
+        if (presentIllness == null) {
+            presentIllness = historyOfPresentIllness;
         }
     }
 

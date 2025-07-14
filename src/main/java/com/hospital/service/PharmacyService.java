@@ -177,7 +177,7 @@ public class PharmacyService {
         
         prescription.setPrescriptionNumber(generatePrescriptionNumber());
         prescription.setPrescriptionDate(LocalDateTime.now());
-        prescription.setStatus("PENDING");
+        prescription.setStatus(Prescription.PrescriptionStatus.ACTIVE);
         
         // Calculer la date de validité (par défaut 30 jours)
         if (prescription.getValidUntil() == null) {
@@ -246,7 +246,7 @@ public class PharmacyService {
             reduceStock(item.getMedication().getId(), item.getQuantity());
         }
         
-        prescription.setStatus("DISPENSED");
+        prescription.setStatus(Prescription.PrescriptionStatus.COMPLETED);
         prescription.setDispensedDate(LocalDateTime.now());
         prescription.setDispensedBy(pharmacistId);
         

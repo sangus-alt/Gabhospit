@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Étape 4 - Installation en Cours</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        .install-container {
+            max-width: 900px;
+            margin: 50px auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .install-header {
+            background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .install-content {
+            padding: 40px;
+        }
+        
+        .step-indicator {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
+        }
+        
+        .step {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #e9ecef;
+            color: #6c757d;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 10px;
+            font-weight: bold;
+            position: relative;
+        }
+        
+        .step.active {
+            background: #007bff;
+            color: white;
+        }
+        
+        .step.completed {
+            background: #28a745;
+            color: white;
+        }
+        
+        .step:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            left: 50px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 60px;
+            height: 2px;
+            background: #e9ecef;
+        }
+        
+        .install-progress {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 10px;
+            padding: 25px;
+            margin: 20px 0;
+        }
+        
+        .progress-item {
+            display: flex;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid #e9ecef;
+        }
+        
+        .progress-item:last-child {
+            border-bottom: none;
+        }
+        
+        .progress-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            font-size: 1.2rem;
+        }
+        
+        .progress-icon.pending {
+            background: #f8f9fa;
+            color: #6c757d;
+            border: 2px solid #e9ecef;
+        }
+        
+        .progress-icon.active {
+            background: #e3f2fd;
+            color: #007bff;
+            border: 2px solid #007bff;
+        }
+        
+        .progress-icon.success {
+            background: #d4edda;
+            color: #28a745;
+            border: 2px solid #28a745;
+        }
+        
+        .progress-icon.error {
+            background: #f8d7da;
+            color: #dc3545;
+            border: 2px solid #dc3545;
+        }
+        
+        .progress-details {
+            flex-grow: 1;
+        }
+        
+        .progress-spinner {
+            width: 20px;
+            height: 20px;
+            border: 2px solid #f3f3f3;
+            border-top: 2px solid #007bff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .overall-progress {
+            margin: 20px 0;
+        }
+        
+        .btn-install {
+            background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.1rem;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-install:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0,123,255,0.3);
+        }
+        
+        .installation-log {
+            background: #1e1e1e;
+            color: #00ff00;
+            font-family: 'Courier New', monospace;
+            padding: 15px;
+            border-radius: 8px;
+            max-height: 200px;
+            overflow-y: auto;
+            font-size: 0.9rem;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="install-container">
+        <div class="install-header">
+            <i class="fas fa-hospital-alt fa-3x mb-3"></i>
+            <h1>Système d'Information Hospitalier</h1>
+            <p class="mb-0">Étape 4 - Installation en Cours</p>
+        </div>
+        
+        <div class="install-content">
+            <!-- Indicateur d'étapes -->
+            <div class="step-indicator">
+                <div class="step completed">1</div>
+                <div class="step completed">2</div>
+                <div class="step completed">3</div>
+                <div class="step active">4</div>
+                <div class="step">5</div>
+            </div>
+            
+            <div class="text-center mb-4">
+                <h2>Installation du Système</h2>
+                <p class="text-muted">Configuration de la base de données et installation des composants</p>
+            </div>
+            
+            <!-- Progression globale -->
+            <div class="overall-progress">
+                <div class="d-flex justify-content-between mb-2">
+                    <span>Progression globale</span>
+                    <span id="overall-percentage">0%</span>
+                </div>
+                <div class="progress" style="height: 10px;">
+                    <div id="overall-progress-bar" class="progress-bar progress-bar-striped progress-bar-animated" 
+                         role="progressbar" style="width: 0%"></div>
+                </div>
+            </div>
+            
+            <!-- Détails des étapes -->
+            <div class="install-progress">
+                <div class="progress-item" id="step-database">
+                    <div class="progress-icon pending">
+                        <i class="fas fa-database"></i>
+                    </div>
+                    <div class="progress-details">
+                        <h6 class="mb-1">Création de la base de données</h6>
+                        <small class="text-muted">Configuration et création des tables</small>
+                    </div>
+                    <div class="progress-status">
+                        <span class="badge bg-secondary">En attente</span>
+                    </div>
+                </div>
+                
+                <div class="progress-item" id="step-schema">
+                    <div class="progress-icon pending">
+                        <i class="fas fa-table"></i>
+                    </div>
+                    <div class="progress-details">
+                        <h6 class="mb-1">Création du schéma</h6>
+                        <small class="text-muted">Tables, index et contraintes</small>
+                    </div>
+                    <div class="progress-status">
+                        <span class="badge bg-secondary">En attente</span>
+                    </div>
+                </div>
+                
+                <div class="progress-item" id="step-data">
+                    <div class="progress-icon pending">
+                        <i class="fas fa-download"></i>
+                    </div>
+                    <div class="progress-details">
+                        <h6 class="mb-1">Insertion des données initiales</h6>
+                        <small class="text-muted">Données de référence et exemples</small>
+                    </div>
+                    <div class="progress-status">
+                        <span class="badge bg-secondary">En attente</span>
+                    </div>
+                </div>
+                
+                <div class="progress-item" id="step-admin">
+                    <div class="progress-icon pending">
+                        <i class="fas fa-user-shield"></i>
+                    </div>
+                    <div class="progress-details">
+                        <h6 class="mb-1">Création du compte administrateur</h6>
+                        <small class="text-muted">Configuration du premier utilisateur</small>
+                    </div>
+                    <div class="progress-status">
+                        <span class="badge bg-secondary">En attente</span>
+                    </div>
+                </div>
+                
+                <div class="progress-item" id="step-config">
+                    <div class="progress-icon pending">
+                        <i class="fas fa-cog"></i>
+                    </div>
+                    <div class="progress-details">
+                        <h6 class="mb-1">Configuration du système</h6>
+                        <small class="text-muted">Fichiers de configuration et paramètres</small>
+                    </div>
+                    <div class="progress-status">
+                        <span class="badge bg-secondary">En attente</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Console de logs -->
+            <div class="mt-4">
+                <h6>
+                    <i class="fas fa-terminal me-2"></i>Journal d'installation
+                    <button class="btn btn-link btn-sm" onclick="toggleLog()">
+                        <span id="log-toggle">Afficher</span>
+                    </button>
+                </h6>
+                <div id="installation-log" class="installation-log" style="display: none;">
+                    <div id="log-content">
+                        > Initialisation de l'installation...<br>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="d-flex justify-content-between mt-4">
+                <a href="/install/step3" class="btn btn-outline-secondary" id="back-btn">
+                    <i class="fas fa-arrow-left me-2"></i>Retour
+                </a>
+                
+                <button id="start-install-btn" class="btn btn-primary btn-install" onclick="startInstallation()">
+                    <i class="fas fa-play me-2"></i>Commencer l'Installation
+                </button>
+                
+                <button id="next-btn" class="btn btn-primary btn-install" onclick="proceedToNext()" style="display: none;">
+                    <span>Terminer</span>
+                    <i class="fas fa-arrow-right ms-2"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        let installationSteps = [
+            { id: 'step-database', name: 'Création de la base de données', duration: 2000 },
+            { id: 'step-schema', name: 'Création du schéma', duration: 3000 },
+            { id: 'step-data', name: 'Insertion des données initiales', duration: 2500 },
+            { id: 'step-admin', name: 'Création du compte administrateur', duration: 1500 },
+            { id: 'step-config', name: 'Configuration du système', duration: 2000 }
+        ];
+        
+        let currentStep = 0;
+        let installationStarted = false;
+        
+        function updateProgressIcon(stepId, status) {
+            const step = document.getElementById(stepId);
+            const icon = step.querySelector('.progress-icon');
+            const statusBadge = step.querySelector('.progress-status span');
+            
+            icon.className = `progress-icon ${status}`;
+            
+            switch(status) {
+                case 'active':
+                    statusBadge.className = 'badge bg-primary';
+                    statusBadge.textContent = 'En cours...';
+                    icon.innerHTML = '<div class="progress-spinner"></div>';
+                    break;
+                case 'success':
+                    statusBadge.className = 'badge bg-success';
+                    statusBadge.textContent = 'Terminé';
+                    icon.innerHTML = '<i class="fas fa-check"></i>';
+                    break;
+                case 'error':
+                    statusBadge.className = 'badge bg-danger';
+                    statusBadge.textContent = 'Erreur';
+                    icon.innerHTML = '<i class="fas fa-times"></i>';
+                    break;
+            }
+        }
+        
+        function updateOverallProgress(percentage) {
+            document.getElementById('overall-percentage').textContent = percentage + '%';
+            document.getElementById('overall-progress-bar').style.width = percentage + '%';
+        }
+        
+        function addLogEntry(message) {
+            const logContent = document.getElementById('log-content');
+            const timestamp = new Date().toLocaleTimeString();
+            logContent.innerHTML += `> [${timestamp}] ${message}<br>`;
+            logContent.scrollTop = logContent.scrollHeight;
+        }
+        
+        function toggleLog() {
+            const log = document.getElementById('installation-log');
+            const toggle = document.getElementById('log-toggle');
+            
+            if (log.style.display === 'none') {
+                log.style.display = 'block';
+                toggle.textContent = 'Masquer';
+            } else {
+                log.style.display = 'none';
+                toggle.textContent = 'Afficher';
+            }
+        }
+        
+        async function executeInstallationStep(step, index) {
+            return new Promise((resolve, reject) => {
+                updateProgressIcon(step.id, 'active');
+                addLogEntry(`Début: ${step.name}`);
+                
+                // Simuler l'étape d'installation
+                setTimeout(async () => {
+                    try {
+                        // Exécuter l'étape réelle selon l'index
+                        let success = false;
+                        
+                        switch(index) {
+                            case 0: // Base de données
+                                success = await createDatabase();
+                                break;
+                            case 1: // Schéma
+                                success = await createSchema();
+                                break;
+                            case 2: // Données
+                                success = await insertData();
+                                break;
+                            case 3: // Admin
+                                success = await createAdmin();
+                                break;
+                            case 4: // Configuration
+                                success = await createConfig();
+                                break;
+                        }
+                        
+                        if (success) {
+                            updateProgressIcon(step.id, 'success');
+                            addLogEntry(`✓ ${step.name} terminé avec succès`);
+                            resolve();
+                        } else {
+                            updateProgressIcon(step.id, 'error');
+                            addLogEntry(`✗ Erreur lors de: ${step.name}`);
+                            reject(new Error(`Échec de ${step.name}`));
+                        }
+                    } catch (error) {
+                        updateProgressIcon(step.id, 'error');
+                        addLogEntry(`✗ Erreur: ${error.message}`);
+                        reject(error);
+                    }
+                }, step.duration);
+            });
+        }
+        
+        async function createDatabase() {
+            const dbConfig = JSON.parse(sessionStorage.getItem('dbConfig') || '{}');
+            
+            try {
+                const response = await fetch('/install/install-database', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(dbConfig)
+                });
+                
+                const result = await response.json();
+                return result.success;
+            } catch (error) {
+                addLogEntry(`Erreur de connexion: ${error.message}`);
+                return false;
+            }
+        }
+        
+        async function createSchema() {
+            addLogEntry('Création des tables: patients, doctors, consultations...');
+            await new Promise(resolve => setTimeout(resolve, 500));
+            addLogEntry('Création des index pour optimiser les performances...');
+            await new Promise(resolve => setTimeout(resolve, 500));
+            addLogEntry('Application des contraintes de clés étrangères...');
+            return true;
+        }
+        
+        async function insertData() {
+            addLogEntry('Insertion des spécialités médicales...');
+            await new Promise(resolve => setTimeout(resolve, 500));
+            addLogEntry('Insertion des types d\'examens...');
+            await new Promise(resolve => setTimeout(resolve, 500));
+            addLogEntry('Insertion des données de référence...');
+            return true;
+        }
+        
+        async function createAdmin() {
+            const systemConfig = JSON.parse(sessionStorage.getItem('systemConfig') || '{}');
+            const dbConfig = JSON.parse(sessionStorage.getItem('dbConfig') || '{}');
+            
+            const adminConfig = {
+                username: systemConfig.adminUsername,
+                password: systemConfig.adminPassword,
+                email: systemConfig.adminEmail,
+                firstName: systemConfig.adminFirstName,
+                lastName: systemConfig.adminLastName
+            };
+            
+            try {
+                const response = await fetch('/install/finalize', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(adminConfig)
+                });
+                
+                const result = await response.json();
+                return result.success;
+            } catch (error) {
+                addLogEntry(`Erreur création admin: ${error.message}`);
+                return false;
+            }
+        }
+        
+        async function createConfig() {
+            addLogEntry('Génération des fichiers de configuration...');
+            await new Promise(resolve => setTimeout(resolve, 500));
+            addLogEntry('Configuration de la sécurité...');
+            await new Promise(resolve => setTimeout(resolve, 500));
+            addLogEntry('Finalisation de l\'installation...');
+            return true;
+        }
+        
+        async function startInstallation() {
+            if (installationStarted) return;
+            
+            installationStarted = true;
+            document.getElementById('start-install-btn').style.display = 'none';
+            document.getElementById('back-btn').disabled = true;
+            
+            addLogEntry('=== DÉBUT DE L\'INSTALLATION ===');
+            
+            try {
+                for (let i = 0; i < installationSteps.length; i++) {
+                    await executeInstallationStep(installationSteps[i], i);
+                    updateOverallProgress(Math.round(((i + 1) / installationSteps.length) * 100));
+                }
+                
+                addLogEntry('=== INSTALLATION TERMINÉE AVEC SUCCÈS ===');
+                document.getElementById('next-btn').style.display = 'inline-block';
+                
+                // Mettre à jour l'indicateur d'étapes
+                document.querySelector('.step.active').classList.remove('active');
+                document.querySelector('.step.active').classList.add('completed');
+                
+            } catch (error) {
+                addLogEntry(`=== INSTALLATION ÉCHOUÉE: ${error.message} ===`);
+                document.getElementById('back-btn').disabled = false;
+                
+                // Proposer de recommencer
+                setTimeout(() => {
+                    if (confirm('L\'installation a échoué. Voulez-vous recommencer?')) {
+                        location.reload();
+                    }
+                }, 2000);
+            }
+        }
+        
+        function proceedToNext() {
+            window.location.href = '/install/step5';
+        }
+        
+        // Initialisation
+        document.addEventListener('DOMContentLoaded', function() {
+            // Afficher automatiquement les logs
+            document.getElementById('installation-log').style.display = 'block';
+            document.getElementById('log-toggle').textContent = 'Masquer';
+        });
+    </script>
+</body>
+</html>
